@@ -1,0 +1,5 @@
+integration:
+  checkin-core:
+    url: http://localhost:9001
+
+
