@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPattern": "/transferencias/6f5d8b5f-7a31-440c-be6c-6c7578687cfd"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "paas/default.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

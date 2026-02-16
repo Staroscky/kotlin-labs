@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/checkin/checkinId%3Aqrcode_pix%3A1%3Ac77016b8-42f4-4fd1-a99c-5b1f14599349"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "checkin/qrcode/cob.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

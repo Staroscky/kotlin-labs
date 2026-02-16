@@ -25,4 +25,18 @@ class CheckinService(
 
         return strategy.convert(rawResponse, checkinId)
     }
+
+    override fun convert(
+        checkinId: String,
+        payload: Map<String, Any>
+    ): CheckinResponse {
+        val checkinId = CheckinId(checkinId)
+
+        val strategy = strategyFactory.getStrategy(
+            checkinId.tipoEntrada,
+            checkinId.versao
+        )
+
+        return strategy.convert(payload, checkinId)
+    }
 }

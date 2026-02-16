@@ -15,7 +15,7 @@ class ChavePixV1Strategy(
     override fun getSupportedVersion(): Pair<TipoEntrada, Int> =
         Pair(TipoEntrada.CHAVE_PIX, 1)
 
-    override fun convert(rawResponse: Map<String, Any>, checkinId: CheckinId): CheckinResponse {
+    override fun convert(rawResponse: Any, checkinId: CheckinId): CheckinResponse {
         return objectMapper.convertValue(rawResponse, ChavePixV1Response::class.java)
     }
 }

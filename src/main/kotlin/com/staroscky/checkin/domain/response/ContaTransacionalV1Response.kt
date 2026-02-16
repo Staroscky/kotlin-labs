@@ -1,10 +1,8 @@
 package com.staroscky.checkin.domain.response
 
 data class ContaTransacionalV1Response(
-    override val checkinId: String,
-    override val uuid: String,
     val dadosBancarios: DadosBancarios
-) : CheckinResponse() {
+) : CheckinResponse {
 
     data class DadosBancarios(
         val ispb: String,

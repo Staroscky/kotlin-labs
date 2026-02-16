@@ -1,19 +1,54 @@
 spring:
   application:
     name: lab
+  threads:
+    virtual:
+      enabled: true
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
+      client:
+        config:
+          default:
+            connectTimeout: 3000
+            readTimeout: 3000
+            loggerLevel: full
+          CheckinCore:
+            connectTimeout: 200
+            readTimeout: 200
+            url: ${integration.checkin-core.url}
+          PaasApi:
+            connectTimeout: 200
+            readTimeout: 200
+            url: ${integration.paas-api.url}
+  # Redis Configuration
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+# Server Configuration
+server:
+  port: 8080
+  shutdown: graceful
 
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 3000
-        readTimeout: 3000
-        loggerLevel: basic
-      CheckinCore:
-        connectTimeout: 200
-        readTimeout: 200
-        url: ${integration.checkin-core.url}
+# Actuator & Metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 
-integration:
-  checkin-core:
-    url: ${CHECKIN_CORE_URL:http://localhost:8080}
+# Logging
+logging:
+  level:
+    com.staroscky.transferencia: DEBUG
+    org.springframework.data.redis: INFO
+    feign: DEBUG
+

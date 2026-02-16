@@ -1,5 +1,7 @@
 integration:
   checkin-core:
     url: http://localhost:9001
+  paas-api:
+    url: http://localhost:9001
 
 

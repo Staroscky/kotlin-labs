@@ -6,5 +6,5 @@ import com.staroscky.checkin.domain.TipoEntrada
 
 interface CheckinResponseStrategy {
     fun getSupportedVersion(): Pair<TipoEntrada, Int>
-    fun convert(rawResponse: Map<String, Any>, checkinId: CheckinId): CheckinResponse
+    fun convert(rawResponse: Any, checkinId: CheckinId): CheckinResponse
 }
