@@ -9,7 +9,7 @@ value class CheckinId(val value: String) {
     }
 
     val checkinId: String get() = value.split(":")[0]
-    val tipoEntrada: TipoEntrada get() = TipoEntrada.valueOf(value.split(":")[1])
+    val tipoEntrada: TipoEntrada get() = TipoEntrada.valueOf(value.split(":")[1].uppercase())
     val versao: Int get() = value.split(":")[2].toInt()
     val uuid: String get() = value.split(":")[3]
 }

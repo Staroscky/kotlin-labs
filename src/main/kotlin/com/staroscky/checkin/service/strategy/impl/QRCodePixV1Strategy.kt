@@ -3,8 +3,8 @@ package com.staroscky.checkin.service.strategy.impl
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.staroscky.checkin.domain.CheckinId
 import com.staroscky.checkin.domain.response.CheckinResponse
-import com.staroscky.checkin.domain.response.QRCodePixV1Response
 import com.staroscky.checkin.domain.TipoEntrada
+import com.staroscky.checkin.domain.response.QrCodePixV1Response
 import com.staroscky.checkin.service.strategy.CheckinResponseStrategy
 import org.springframework.stereotype.Component
 
@@ -15,7 +15,7 @@ class QRCodePixV1Strategy(
     override fun getSupportedVersion(): Pair<TipoEntrada, Int> =
         Pair(TipoEntrada.QRCODE_PIX, 1)
 
-    override fun convert(rawResponse: Map<String, Any>, checkinId: CheckinId): CheckinResponse {
-        return objectMapper.convertValue(rawResponse, QRCodePixV1Response::class.java)
+    override fun convert(rawResponse: Any, checkinId: CheckinId): CheckinResponse {
+        return objectMapper.convertValue(rawResponse, QrCodePixV1Response::class.java)
     }
 }

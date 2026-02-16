@@ -15,7 +15,7 @@ class ContaTransacionalV1Strategy(
     override fun getSupportedVersion(): Pair<TipoEntrada, Int> =
         Pair(TipoEntrada.MANUAL, 1)
 
-    override fun convert(rawResponse: Map<String, Any>, checkinId: CheckinId): CheckinResponse {
+    override fun convert(rawResponse: Any, checkinId: CheckinId): CheckinResponse {
         return objectMapper.convertValue(rawResponse, ContaTransacionalV1Response::class.java)
     }
 }

@@ -1,0 +1,26 @@
+{
+  "instrumentos": [
+    {
+      "id": "1",
+      "nome": "PIX",
+      "valido": true,
+      "validoAgendamento": true
+    },
+    {
+      "id": "1",
+      "nome": "TED",
+      "valido": true,
+      "validoAgendamento": true,
+      "finalidades": [
+        {
+          "id": "1",
+          "descricao": "Pagamento de serviços"
+        },
+        {
+          "id": "2",
+          "descricao": "Transferência entre contas"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "endToEndId": "E1234567820250214123456789012345",
+  "chave": "email@dominio.com",
+  "tipoChave": "EMAIL",
+  "conta": {
+    "idConta": "fde8b67c-5c91-4782-a2c7-cd8ff0e87dd0",
+    "tipoConta": "CACC",
+    "agencia": "1234",
+    "numero": "987654",
+    "ispb": "12345678",
+    "nomeBanco": "Banco Exemplo S.A."
+  },
+  "titular": {
+    "idCliente": "495f70c4-7581-4926-a32c-e2f6f3cbecbb",
+    "nome": "JOAO DA SILVA",
+    "cpfCnpj": "12345678901",
+    "tipoPessoa": "FISICA"
+  },
+  "status": "ATIVA"
+}

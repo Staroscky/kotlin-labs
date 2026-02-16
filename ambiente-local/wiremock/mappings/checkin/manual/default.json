@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/checkin/checkinId%3Amanual%3A1%3A(.*)"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "checkin/manual/default.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/checkin/checkinId%3Achave_pix%3A1%3A2da8f6ed-3ac6-4d12-ae63-421f3919bf94"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "checkin/chave-pix.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
