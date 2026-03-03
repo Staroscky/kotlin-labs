@@ -1,12 +1,14 @@
 package com.staroscky.transferencia.service.mapper
 
+import com.staroscky.checkin.domain.CheckinId
 import com.staroscky.checkin.domain.TipoEntrada
 import com.staroscky.checkin.domain.response.ChavePixV1Response
+import com.staroscky.checkin.domain.response.CheckinResponse
 import com.staroscky.checkin.domain.response.ContaTransacionalV1Response
 import com.staroscky.checkin.domain.response.QrCodePixV1Response
 import com.staroscky.transferencia.client.dto.*
 import com.staroscky.transferencia.domain.TransferenciaCache
-import com.staroscky.transferencia.domain.TransferenciaContext
+import com.staroscky.transferencia.domain.TransferenciaRequest
 import org.springframework.stereotype.Component
 import java.time.ZoneOffset
 import java.util.UUID
@@ -42,17 +44,11 @@ class CheckinToPaasMapper {
     /**
      * Mapeia para request de criação (POST) completo
      */
-    fun mapCreate(context: TransferenciaContext): PaasCreateRequest {
-        val checkinResponse = context.dadosCheckin
-            ?: throw IllegalStateException("dadosCheckin deve estar populado")
-        
-        val checkinId = context.checkinIdParsed
-            ?: throw IllegalStateException("checkinIdParsed deve estar populado")
-        
-        val destino = when (checkinId.tipoEntrada) {
-            TipoEntrada.CHAVE_PIX -> mapDestinoChavePix(context, checkinResponse as ChavePixV1Response)
-            TipoEntrada.QRCODE_PIX -> mapDestinoQRCodePix(context, checkinResponse as QrCodePixV1Response)
-            TipoEntrada.MANUAL -> mapDestinoManual(context, checkinResponse as ContaTransacionalV1Response)
+    fun mapCreate(transferenciaRequest: TransferenciaRequest, checkinResponse: CheckinResponse): PaasCreateRequest {
+        val destino = when (CheckinId(transferenciaRequest.checkinId).tipoEntrada) {
+            TipoEntrada.CHAVE_PIX -> mapDestinoChavePix(transferenciaRequest, checkinResponse as ChavePixV1Response)
+            TipoEntrada.QRCODE_PIX -> mapDestinoQRCodePix(transferenciaRequest, checkinResponse as QrCodePixV1Response)
+            TipoEntrada.MANUAL -> mapDestinoManual(transferenciaRequest, checkinResponse as ContaTransacionalV1Response)
         }
         
         return PaasCreateRequest(
@@ -67,27 +63,16 @@ class CheckinToPaasMapper {
      * Mapeia para request de atualização (PATCH) parcial
      * Envia APENAS os campos que mudaram
      */
-    fun mapUpdate(context: TransferenciaContext, cacheAtual: TransferenciaCache): PaasUpdateRequest {
-        val transferencia = mutableMapOf<String, Any>()
-        
-        // Verifica o que mudou
-        if (context.valorTransferencia != cacheAtual.valorTransferencia) {
-            transferencia["valor"] = context.valorTransferencia
-        }
-        
-        if (context.dataTransferencia != cacheAtual.dataTransferencia) {
-            transferencia["dataTransferencia"] = context.dataTransferencia
-                .atStartOfDay()
-                .atOffset(ZoneOffset.UTC)
-        }
-        
+    fun mapUpdate(transferenciaRequest: TransferenciaRequest): PaasUpdateRequest {
         return PaasUpdateRequest(
             comandosJornadas = ComandosJornadasUpdate(
                 destinos = listOf(
                     DestinoUpdatePaas(
                         transferencia = TransferenciaUpdatePaas(
-                            valor = transferencia["valor"] as? java.math.BigDecimal,
-                            dataTransferencia = transferencia["dataTransferencia"] as? java.time.OffsetDateTime
+                            valor = transferenciaRequest.valor,
+                            dataTransferencia = transferenciaRequest.data
+                                .atStartOfDay()
+                                .atOffset(ZoneOffset.UTC)
                         )
                     )
                 )
@@ -96,13 +81,13 @@ class CheckinToPaasMapper {
     }
     
     private fun mapDestinoChavePix(
-        context: TransferenciaContext,
+        transferenciaRequest: TransferenciaRequest,
         response: ChavePixV1Response
     ): DestinoPaas {
         return DestinoPaas(
             transferencia = TransferenciaPaas(
-                valor = context.valorTransferencia,
-                dataTransferencia = context.dataTransferencia.atStartOfDay().atOffset(ZoneOffset.UTC),
+                valor = transferenciaRequest.valor,
+                dataTransferencia = transferenciaRequest.data.atStartOfDay().atOffset(ZoneOffset.UTC),
                 descricao = "Transferência via CheckinId",
                 endToEndId = response.endToEndId,
                 idTransferencia = null,
@@ -124,7 +109,7 @@ class CheckinToPaasMapper {
     }
     
     private fun mapDestinoQRCodePix(
-        context: TransferenciaContext,
+        transferenciaRequest: TransferenciaRequest,
         response: QrCodePixV1Response
     ): DestinoPaas {
         val (tipoQRCode, troco) = when (response) {
@@ -139,8 +124,8 @@ class CheckinToPaasMapper {
         // QRCode não tem dados completos do destino, usar dados básicos
         return DestinoPaas(
             transferencia = TransferenciaPaas(
-                valor = context.valorTransferencia,
-                dataTransferencia = context.dataTransferencia.atStartOfDay().atOffset(ZoneOffset.UTC),
+                valor = transferenciaRequest.valor,
+                dataTransferencia = transferenciaRequest.data.atStartOfDay().atOffset(ZoneOffset.UTC),
                 descricao = "Transferência via CheckinId",
                 endToEndId = null,
                 idTransferencia = null,
@@ -165,13 +150,13 @@ class CheckinToPaasMapper {
     }
     
     private fun mapDestinoManual(
-        context: TransferenciaContext,
+        transferenciaRequest: TransferenciaRequest,
         response: ContaTransacionalV1Response
     ): DestinoPaas {
         return DestinoPaas(
             transferencia = TransferenciaPaas(
-                valor = context.valorTransferencia,
-                dataTransferencia = context.dataTransferencia.atStartOfDay().atOffset(ZoneOffset.UTC),
+                valor = transferenciaRequest.valor,
+                dataTransferencia = transferenciaRequest.data.atStartOfDay().atOffset(ZoneOffset.UTC),
                 descricao = "Transferência via CheckinId",
                 endToEndId = null,
                 idTransferencia = null,

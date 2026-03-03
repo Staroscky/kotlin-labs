@@ -1,11 +1,13 @@
 package com.staroscky.transferencia.service.mapper
 
+import com.staroscky.checkin.domain.CheckinId
 import com.staroscky.checkin.domain.TipoEntrada
 import com.staroscky.checkin.domain.response.ChavePixV1Response
+import com.staroscky.checkin.domain.response.CheckinResponse
 import com.staroscky.checkin.domain.response.ContaTransacionalV1Response
 import com.staroscky.checkin.domain.response.QrCodePixV1Response
 import com.staroscky.motor.domain.MotorDecisaoRequest
-import com.staroscky.transferencia.domain.TransferenciaContext
+import com.staroscky.transferencia.domain.TransferenciaRequest
 import org.springframework.stereotype.Component
 import java.time.ZoneOffset
 
@@ -22,33 +24,28 @@ class CheckinToMotorMapper {
         )
     }
 
-    fun map(context: TransferenciaContext): MotorDecisaoRequest {
-        val checkinResponse = context.dadosCheckin
-            ?: throw IllegalStateException("dadosCheckin deve estar populado")
+    fun map(transferenciaRequest: TransferenciaRequest, checkinResponse: CheckinResponse): MotorDecisaoRequest {
 
-        val checkinId = context.checkinIdParsed
-            ?: throw IllegalStateException("checkinIdParsed deve estar populado")
-
-        return when (checkinId.tipoEntrada) {
+        return when (CheckinId(transferenciaRequest.checkinId).tipoEntrada) {
             TipoEntrada.CHAVE_PIX ->
-                mapChavePix(context, checkinResponse as ChavePixV1Response)
+                mapChavePix(transferenciaRequest, checkinResponse as ChavePixV1Response)
 
             TipoEntrada.QRCODE_PIX ->
-                mapQRCodePix(context, checkinResponse as QrCodePixV1Response)
+                mapQRCodePix(transferenciaRequest, checkinResponse as QrCodePixV1Response)
 
             TipoEntrada.MANUAL ->
-                mapManual(context, checkinResponse as ContaTransacionalV1Response)
+                mapManual(transferenciaRequest, checkinResponse as ContaTransacionalV1Response)
         }
     }
 
     private fun mapChavePix(
-        context: TransferenciaContext,
+        transferenciaRequest: TransferenciaRequest,
         response: ChavePixV1Response
     ): MotorDecisaoRequest {
 
         val operacao = MotorDecisaoRequest.Operacao(
-            valor = context.valorTransferencia,
-            dataTransferencia = context.dataTransferencia
+            valor = transferenciaRequest.valor,
+            dataTransferencia = transferenciaRequest.data
                 .atStartOfDay()
                 .atOffset(ZoneOffset.UTC),
             descricao = "Transferência via CheckinId",
@@ -76,7 +73,7 @@ class CheckinToMotorMapper {
     }
 
     private fun mapQRCodePix(
-        context: TransferenciaContext,
+        transferenciaRequest: TransferenciaRequest,
         response: QrCodePixV1Response
     ): MotorDecisaoRequest {
 
@@ -95,8 +92,8 @@ class CheckinToMotorMapper {
         }
 
         val operacao = MotorDecisaoRequest.Operacao(
-            valor = context.valorTransferencia,
-            dataTransferencia = context.dataTransferencia
+            valor = transferenciaRequest.valor,
+            dataTransferencia = transferenciaRequest.data
                 .atStartOfDay()
                 .atOffset(ZoneOffset.UTC),
             descricao = "Transferência via CheckinId",
@@ -123,13 +120,13 @@ class CheckinToMotorMapper {
     }
 
     private fun mapManual(
-        context: TransferenciaContext,
+        transferenciaRequest: TransferenciaRequest,
         response: ContaTransacionalV1Response
     ): MotorDecisaoRequest {
 
         val operacao = MotorDecisaoRequest.Operacao(
-            valor = context.valorTransferencia,
-            dataTransferencia = context.dataTransferencia
+            valor = transferenciaRequest.valor,
+            dataTransferencia = transferenciaRequest.data
                 .atStartOfDay()
                 .atOffset(ZoneOffset.UTC),
             descricao = "Transferência via CheckinId",
