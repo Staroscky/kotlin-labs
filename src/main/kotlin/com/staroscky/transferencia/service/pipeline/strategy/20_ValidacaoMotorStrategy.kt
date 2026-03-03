@@ -5,16 +5,7 @@ import com.staroscky.transferencia.service.pipeline.PipelineStep
 import com.staroscky.transferencia.service.steps.ValidarMotorStep
 import org.springframework.stereotype.Component
 
-/**
- * Strategy para validar no Motor de Decisão
- * 
- * Aplica quando:
- * - Cache não existe (primeira vez), OU
- * - Hash mudou (valor ou data diferente)
- * 
- * Sempre que precisa validar, chama o motor.
- * O motor já lança exceção se nenhum instrumento for válido.
- */
+
 @Component
 class ValidacaoMotorStrategy(
     private val validarMotorStep: ValidarMotorStep

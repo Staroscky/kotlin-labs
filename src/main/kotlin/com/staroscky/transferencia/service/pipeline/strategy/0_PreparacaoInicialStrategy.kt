@@ -6,13 +6,7 @@ import com.staroscky.transferencia.service.steps.CalcularHashStep
 import com.staroscky.transferencia.service.steps.VerificarCacheStep
 import org.springframework.stereotype.Component
 
-/**
- * Strategy de preparação inicial
- * 
- * Sempre executa no início do pipeline para:
- * - Calcular hash da request
- * - Verificar se existe cache
- */
+
 @Component
 class PreparacaoInicialStrategy(
     private val calcularHashStep: CalcularHashStep,
@@ -20,7 +14,6 @@ class PreparacaoInicialStrategy(
 ) : FluxoStrategy {
     
     override fun aplica(context: TransferenciaContext): Boolean {
-        // Sempre aplica - é a preparação obrigatória
         return true
     }
     
@@ -29,5 +22,5 @@ class PreparacaoInicialStrategy(
         verificarCacheStep
     )
     
-    override fun prioridade(): Int = 0  // Primeiro sempre
+    override fun prioridade(): Int = 0
 }

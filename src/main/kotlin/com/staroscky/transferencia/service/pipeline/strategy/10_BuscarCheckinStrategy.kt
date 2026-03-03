@@ -5,14 +5,6 @@ import com.staroscky.transferencia.service.pipeline.PipelineStep
 import com.staroscky.transferencia.service.steps.BuscarCheckinStep
 import org.springframework.stereotype.Component
 
-/**
- * Strategy para buscar dados do checkin
- * 
- * Aplica quando:
- * - Cache não existe (primeira vez)
- * 
- * Quando cache existe, reutiliza os dados já salvos (dadosCheckin).
- */
 @Component
 class BuscarCheckinStrategy(
     private val buscarCheckinStep: BuscarCheckinStep

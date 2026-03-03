@@ -52,9 +52,7 @@ class TransferenciaPipeline(
     }
 
     private fun montarResponseFinal(context: TransferenciaContext): TransferenciaResponse {
-        // Se chegou aqui sem response no context, algo deu errado
         return context.dadosCache?.let { cache ->
-            // Retorna do cache
             TransferenciaResponse(
                 data = com.staroscky.transferencia.domain.TransferenciaData(
                     motor = cache.resultadoMotor,

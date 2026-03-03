@@ -4,16 +4,6 @@ import com.staroscky.transferencia.domain.TransferenciaContext
 import com.staroscky.transferencia.service.pipeline.PipelineStep
 import org.springframework.stereotype.Component
 
-/**
- * Strategy para retornar dados do cache
- * 
- * Aplica quando:
- * - Cache existe
- * - Hash da request é igual ao hash do cache (nada mudou)
- * 
- * Quando aplica, não adiciona nenhum step adicional pois
- * já tem todos os dados necessários no cache.
- */
 @Component
 class RetornarCacheStrategy : FluxoStrategy {
     
@@ -27,5 +17,5 @@ class RetornarCacheStrategy : FluxoStrategy {
         return emptyList()
     }
     
-    override fun prioridade(): Int = 5  // Logo após verificar cache
+    override fun prioridade(): Int = 5
 }
